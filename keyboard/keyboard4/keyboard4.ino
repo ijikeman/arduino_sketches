@@ -8,10 +8,10 @@ bool currentState[outputNum][inputNum];
 
 void setup() {
   for (i = 0; i < outputNum; i++) {
-    pinMode(outputPins[i],OUTPUT);
-    digitalWrite(outputPins[i],HIGH);
+    pinMode(outputPins[i], OUTPUT);
+    digitalWrite(outputPins[i], HIGH);
     for (j = 0; j < inputNum; j++) {
-      pinMode(inputPins[j],INPUT_PULLUP);
+      pinMode(inputPins[j], INPUT_PULLUP);
       currentState[i][j] = HIGH;
       beforeState[i][j] = HIGH;
     }
@@ -25,14 +25,10 @@ void loop() {
     for (j = 0; j < inputNum; j++) {
       currentState[i][j] = digitalRead(inputPins[j]);
       beforeState[i][j] = currentState[i][j];
-    }
-    digitalWrite(outputPins[i], HIGH);
-  }
-  for (i = 0; i < outputNum; i++) {
-    for (j = 0; j < inputNum; j++) {
       Serial.print(beforeState[i][j]);
       Serial.print(":");
     }
+    digitalWrite(outputPins[i], HIGH);
   }
   Serial.println("");
   delay(10);
