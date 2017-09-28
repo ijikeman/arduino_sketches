@@ -34,8 +34,8 @@ const int yAxis = A6;         // joystick Y axis
 const bool xReverse = 0;
 const bool yReverse = 0;
 // parameters for reading the joystick:
-int range = 12;               // output range of X or Y movement
-int responseDelay = 5;        // response delay of the mouse, in ms
+int range = 16;               // output range of X or Y movement
+int responseDelay = 3;        // response delay of the mouse, in ms
 int threshold = range / 4;    // resting threshold
 int center = range / 2;       // resting position value
 bool currentMouseButtonStatus = HIGH;
