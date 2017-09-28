@@ -1,19 +1,34 @@
 #include <Keyboard.h>
 #include "Keydefine.h"
 
+// Let's Split
+// const int inputNum = 6;
+// const int outputNum = 4;
+// const int inputPins[inputNum] = {19, 18, 15, 14, 16, 10};
+// const int outputPins[outputNum] = {6, 7, 8, 9};
+//const byte keyMap[outputNum][inputNum]  = {
+//   {KC_TAB,  KC_Q,    KC_W,    KC_E,   KC_R,    KC_T},
+//   {KC_LCTL, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
+//   {KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B},
+//   {KC_ESC,  NONE,    KC_LALT, KC_LGUI, NONE,   KC_SPC}
+//};
+
+// Maxipad
 const int inputNum = 6;
-const int outputNum = 4;
-const int inputPins[inputNum] = {19, 18, 15, 14, 16, 10};
-const int outputPins[outputNum] = {6, 7, 8, 9};
+const int outputNum = 5;
+const int inputPins[inputNum] =  {21, 5, 6, 20, 8, 9};
+const int outputPins[outputNum] ={10, 16, 14, 15, 18};
+const byte keyMap[outputNum][inputNum]  = {
+   {KC_QUOT, KC_1,    KC_2,    KC_3,   KC_4,    KC_5},
+   {KC_TAB,  KC_Q,    KC_W,    KC_E,   KC_R,    KC_T},
+   {KC_LCTL, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
+   {KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B},
+   {KC_ESC,  NONE,    KC_LALT,   KC_LGUI, NONE, KC_SPC}
+};
 
 bool currentState[outputNum][inputNum], beforeState[outputNum][inputNum];
 int i, j;
-const byte keyMap[outputNum][inputNum]  = {
-  {KC_TAB,  KC_Q,    KC_W,    KC_E,   KC_R,    KC_T},
-  {KC_CAPS, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
-  {KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B},
-  {KC_BSPC, KC_LALT, KC_LGUI, KC_LSFT, KC_SPC, KC_ENT}
-};
+
 
 void setup() {
   Serial.begin(9600);
