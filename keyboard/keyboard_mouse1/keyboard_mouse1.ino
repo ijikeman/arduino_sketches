@@ -19,31 +19,31 @@ const int outputNum = 5;
 const int inputPins[inputNum] =  {21, 5, 6, 20, 8, 9};
 const int outputPins[outputNum] ={10, 16, 14, 15, 18};
 const byte keyMap[outputNum][inputNum]  = {
-   {KC_QUOT, KC_1,    KC_2,    KC_3,   KC_4,    KC_5},
+   {KC_GRV, KC_1,    KC_2,    KC_3,   KC_4,    KC_5},
    {KC_TAB,  KC_Q,    KC_W,    KC_E,   KC_R,    KC_T},
    {KC_LCTL, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
    {KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B},
    {KC_ESC,  NONE,    KC_LALT,   KC_LGUI, NONE, KC_SPC}
 };
 
-
 #include "Mouse.h"
+
 const int mouseButton = 7;    // input pin for the mouse pushButton
 const int xAxis = A1;         // joystick X axis
 const int yAxis = A6;         // joystick Y axis
 const bool xReverse = 0;
 const bool yReverse = 0;
+
 // parameters for reading the joystick:
-int range = 16;               // output range of X or Y movement
-int responseDelay = 3;        // response delay of the mouse, in ms
-int threshold = range / 4;    // resting threshold
-int center = range / 2;       // resting position value
+int range = 30;               // output range of X or Y movement
+int responseDelay = 50;        // response delay of the mouse, in ms
+//int threshold = range / 4;    // resting threshold
+int center = range/2;       // resting position value
 bool currentMouseButtonStatus = HIGH;
 bool beforeMouseButtonStatus = HIGH;
 
 bool currentState[outputNum][inputNum], beforeState[outputNum][inputNum];
 int i, j;
-
 
 void setup() {
   Serial.begin(9600);
@@ -108,11 +108,9 @@ void loop() {
       Mouse.release(MOUSE_LEFT);
     }
   }
-  delay(10);
+  delay(responseDelay);
 }
-
-
-
+   
 /*
   reads an axis (0 or 1 for x or y) and scales the analog input range to a range
   from 0 to <range>
@@ -124,18 +122,17 @@ int readAxis(int thisAxis, bool thisReverse) {
 
   // map the reading from the analog input range to the output range:
   reading = map(reading, 0, 1023, 0, range);
-
   // if the output reading is outside from the rest position threshold, use it:
+
   if (thisReverse == 0) {
     distance = reading - center;
   } else {
     distance = center - reading;
   }
 
-  if (abs(distance) < threshold) {
+  if ((distance <= 1) && (-1 <= distance)) {
     distance = 0;
   }
-
   // return the distance for this axis:
   return distance;
 }
