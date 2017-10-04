@@ -39,7 +39,7 @@ bool currentState[outputNum][inputNum], beforeState[outputNum][inputNum];
 int i, j;
 byte sendData, readData;
 byte isPress, keyboardOrMouse, col, row;
-byte mouseXOrY, mouseMinus, mouseDistance;
+byte mouseXOrY, mouseMinusX, mouseDistanceX, mouseMinusY, mouseDistanceY;
 
 void setup() {
   Serial.begin(9600);
@@ -93,9 +93,8 @@ void loop() {
   int yReading = readAxis(yAxis, yReverse);
 
   // if the mouse control state is active, move the mouse:
-  if (xReading != 0) {
+  if ((xReading != 0) || (yReading != 0)) {
     Serial1.write(makeMouseData(xReading, 0));
-  } else if (yReading != 0) {
     Serial1.write(makeMouseData(yReading, 1));
   }
   Mouse.move(xReading, yReading, 0);
@@ -114,7 +113,7 @@ void loop() {
 
   // 相手側から来たとき
   if (Serial1.available()) {
-    keyboardOrMouse = isPress = col = row = mouseXOrY = mouseMinus = mouseDistance = 0;
+    keyboardOrMouse = isPress = col = row = mouseXOrY = mouseMinusX = mouseDistanceX = mouseMinusY = mouseDistanceY =0;
     digitalWrite(17, HIGH);
     readData = Serial1.read();
     keyboardOrMouse = readData >> 7;
@@ -131,19 +130,28 @@ void loop() {
      //Mouse Mode
     } else {
       mouseXOrY = (readData & 0b01000000) >> 6;
-      mouseMinus = (readData & 0b00100000) >> 5;
-      mouseDistance = readData & 0b00011111;
+      // X
       if (mouseXOrY == 0) {
-        if (mouseMinus == 0) {
-          Mouse.move(mouseDistance, 0, 0);
-        } else {
-          Mouse.move((0 - mouseDistance), 0, 0);
-        }
-      } else {
-        if (mouseMinus == 0) {
-          Mouse.move(0, mouseDistance, 0);
-        } else {
-          Mouse.move(0, (0 - mouseDistance), 0);
+        mouseMinusX = (readData & 0b00100000) >> 5;
+        mouseDistanceX = readData & 0b00011111;
+        readData = Serial1.read();
+        mouseXOrY = (readData & 0b01000000) >> 6;
+        if (mouseXOrY == 1) {
+          mouseMinusY = (readData & 0b00100000) >> 5;
+          mouseDistanceY = readData & 0b00011111;
+          if (mouseMinusX == 0) {
+            if (mouseMinusY == 0 ) {
+              Mouse.move(mouseDistanceX, mouseDistanceY, 0);
+            } else {
+              Mouse.move(mouseDistanceX, (0 - mouseDistanceY), 0);
+            }
+          } else {
+            if (mouseMinusY == 0 ) {
+              Mouse.move((0 - mouseDistanceX), mouseDistanceY, 0);
+            } else {
+              Mouse.move((0 - mouseDistanceX), (0 - mouseDistanceY), 0);
+            }
+          }
         }
       }
     }
@@ -181,17 +189,6 @@ int makeMouseData(int currentDistance, byte xOrY) {
   } else {
     distance = currentDistance;
   }
-  Serial.print(keyboardOrMouse);
-  Serial.print(":");
-  Serial.print(xOrY);
-  Serial.print(":");
-  Serial.print(minus);
-  Serial.print(":");
-  Serial.print(currentDistance);
-  Serial.print(":");
-  Serial.print(distance);
   mouseData = keyboardOrMouse << 7 | xOrY << 6| minus << 5 | distance;
-  Serial.print(":");
-  Serial.println(mouseData);
   return mouseData;
 }
