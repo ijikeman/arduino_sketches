@@ -1,5 +1,6 @@
 #include "Keydefine.h"
 #include <Keyboard.h>
+#include "Mouse.h"
 
 // Maxipad
 const int inputNum = 6;
@@ -20,19 +21,16 @@ const byte keyMap[outputNum*2][inputNum*2]  = {
    {KC_BSPC, NONE,    KC_LEFT, KC_DOWN,KC_UP,   KC_RGHT}
 };
 
-#include "Mouse.h"
 const int mouseButton = 7;    // input pin for the mouse pushButton
 const int xAxis = A1;         // joystick X axis
 const int yAxis = A6;         // joystick Y axis
 const bool xReverse = 0;
 const bool yReverse = 0;
+
 // parameters for reading the joystick:
-int range = 30;               // output range of X or Y movement
-int min_speed 2;
-int max_speed 15;
-int responseDelay = 3;        // response delay of the mouse, in ms
-int threshold = range / 4;    // resting threshold
-int center = range / 2;       // resting position value
+int range = 20;               // output range of X or Y movement
+//int threshold = range / 4;    // resting threshold
+int center = range/2;       // resting position value
 bool currentMouseButtonStatus = HIGH;
 bool beforeMouseButtonStatus = HIGH;
 
@@ -46,6 +44,9 @@ void setup() {
   Serial.begin(9600);
   Serial1.begin(9600, SERIAL_8E1);
   Keyboard.begin();
+  // take control of the mouse:
+  Mouse.begin();
+  pinMode(mouseButton, INPUT_PULLUP);
 
   for ( i = 0; i < outputNum; i++) {
     pinMode(outputPins[i], OUTPUT); // set to OUTPUT and LOW(0v) on all OutputPin
@@ -56,10 +57,6 @@ void setup() {
       beforeState[i][j] = currentState[i][j] = HIGH; // initial to curentState, beforeState
     }
   }
-
-  // take control of the mouse:
-  Mouse.begin();
-  pinMode(mouseButton, INPUT_PULLUP);
 }
 
 void loop() {
@@ -97,6 +94,7 @@ void loop() {
   // if the mouse control state is active, move the mouse:
   Mouse.move(xReading, yReading, 0);
 
+  // read the mouse button and click or not click:
   // if the mouse button is pressed:
   currentMouseButtonStatus = digitalRead(mouseButton);
   if (beforeMouseButtonStatus != currentMouseButtonStatus) {
@@ -132,21 +130,17 @@ void loop() {
 }
 
 int readAxis(int thisAxis, bool thisReverse) {
-  // read the analog input:
   int reading = analogRead(thisAxis);
   int distance;
 
   // map the reading from the analog input range to the output range:
   reading = map(reading, 0, 1023, 0, range);
-
-  // if the output reading is outside from the rest position threshold, use it:
   if (thisReverse == 0) {
     distance = reading - center;
   } else {
     distance = center - reading;
   }
-
-  if (abs(distance) < threshold) {
+  if ((distance <= 1) && (-1 <= distance)) {
     distance = 0;
   }
 
