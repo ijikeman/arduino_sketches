@@ -1,34 +1,35 @@
-#define LAYER_BASE 0
-#define LAYER_UPPER 1
-#define LAYER_LOWER 2
+#define BASE 0
+#define UPPER 1
+#define LOWER 2
 const byte outputNum = 1;
 const byte inputNum = 1;
 
 #define FUNC_LT 1<<12
-#define LT(layer,key) (unsigned int)(FUNC_MO | layer << 8 | key)
+#define LT(layer,key) (unsigned int)(FUNC_LT | layer << 8 | key)
 #define KC_H 0x63
 
 byte currentLayer = 0;
 byte beforeLayer = 0;
 
 const int keyMap[][outputNum][inputNum] = {
-  [LAYER_BASE] = {
-  	{LT(LAYER_UPPER, KC_H)}
+  [BASE] = {
+  	{LT(LOWER, KC_H)}
   },
-  [LAYER_UPPER] = {
+  [UPPER] = {
 	{2}
   },
-  [LAYER_LOWER] = {
+  [LOWER] = {
 	{3}
   }
 };
 void setup() {
-  currentLayer = LAYER_BASE;
+  currentLayer = BASE;
   Serial.begin(9600);
 }
 
 void loop() {
-  Serial.print(keyMap[currentLayer][0][0]);
+  Serial.println(keyMap[currentLayer][0][0]);
+  delay(500);
 }
 
 void switchlayer(byte clayer) {
