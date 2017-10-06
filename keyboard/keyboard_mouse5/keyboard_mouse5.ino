@@ -12,7 +12,7 @@ const byte keyMap[outputNum*2][inputNum*2]  = {
    {KC_TAB,  KC_Q,    KC_W,    KC_E,   KC_R,    KC_T},
    {KC_LCTL, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
    {KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B},
-   {KC_ESC,  NONE,    KC_LALT,   KC_LGUI, KC_EQL, KC_SPC},
+   {KC_ESC,  KC_RBRC,    KC_LALT,   KC_LGUI, KC_EQL, KC_SPC},
 
    {KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_MINS},
    {KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,    KC_LBRC},
