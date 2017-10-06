@@ -13,20 +13,19 @@
 // FUNCTIONS MACRO
 #define LT(layer,key) (unsigned int)(FUNC_LT | layer << 8 | key)
 
-byte currentLayer = 0;
-byte beforeLayer = 0;
+int currentLayer = 0;
+int beforeLayer = 0;
 
-
-#define outputNum 5
-#define inputNum 6
-
+#define mouseButton 7    // input pin for the mouse pushButton
+bool currentMouseButtonStatus = HIGH;
+bool beforeMouseButtonStatus = HIGH;
 
 // Maxipad
 const int inputNum = 6;
 const int outputNum = 5;
 const int inputPins[inputNum] =  {21, 5, 6, 20, 8, 9};
 const int outputPins[outputNum] ={10, 16, 14, 15, 18};
-const byte keyMap[][outputNum*2][inputNum*2]  = {
+const unsigned int keyMap[][outputNum*2][inputNum*2]  = {
   [BASE] = {
    {KC_GRV, KC_1,    KC_2,    KC_3,   KC_4,    KC_5},
    {KC_TAB,  KC_Q,    KC_W,    KC_E,   KC_R,    KC_T},
@@ -49,9 +48,9 @@ const byte keyMap[][outputNum*2][inputNum*2]  = {
    {_______, _______, _______, _______, _______, _______ },
 
    {_______, _______, _______, _______, _______, _______ },
-   {KC_CIRC, KC_ARMP, KC_ASTR, KC_LPRN, KC_RPRN, KC_EQL },
+   {KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PLUS },
    {_______, _______, _______, _______, _______, _______ },
-   {_______, _______, _______, _______, _______, _______ },
+   {_______, _______, _______, _______, _______, KC_PIPE },
    {KC_DEL, _______, _______, _______, _______, _______ }
   },
 
@@ -65,16 +64,63 @@ const byte keyMap[][outputNum*2][inputNum*2]  = {
    {_______, _______, _______, _______, _______, _______ },
    {KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_MINS},
    {_______, _______, _______, _______, _______, _______ },
-   {_______, _______, _______, _______, _______, _______ },
+   {_______, _______, _______, _______, _______, KC_BSLS },
    {KC_DEL, _______, _______, _______, _______, _______ }
   }
 };
 
-
 void setup() {
   Serial.begin(9600);
+  pinMode(mouseButton, INPUT_PULLUP);
+  currentLayer = BASE;
 }
 
 void loop() {
-    printf("%d", keyMap[0][0][0]);
+  unsigned int keyData = keyMap[currentLayer][0][0];
+  unsigned int func = keyData >> 12;
+  unsigned int layer = (keyData & 0b0000111100000000) >> 8;
+  unsigned int keycode = keyData & 0b0000000011111111;
+  Serial.println(keyData);
+//  Serial.print(":");
+//  Serial.print(layer);
+//  Serial.print(":");
+//  Serial.println(keycode);
+
+  switch(func) {
+    case 0:
+      break;
+    case 1: // Layer Tap
+      beforeLayer = currentLayer;
+      currentLayer = layer;
+      break;
+    default:
+      break;
+  }
+  Serial.print(currentLayer);
+  Serial.print(":");
+  Serial.println(beforeLayer);
+
+  currentMouseButtonStatus = digitalRead(mouseButton);
+  Serial.println(currentMouseButtonStatus);
+  if (beforeMouseButtonStatus != currentMouseButtonStatus) {
+    beforeMouseButtonStatus = currentMouseButtonStatus;
+    if (currentMouseButtonStatus == LOW) {
+      Serial.println(".press(MOUSE_LEFT)");
+      currentLayer = 4;
+      beforeLayer = 0;
+    } else {
+      Serial.println(".release(MOUSE_LEFT)");
+      switch (func) {
+        case 1: // Layer Tap
+          currentLayer = beforeLayer;
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  Serial.print(currentLayer);
+  Serial.print(":");
+  Serial.println(beforeLayer);
+  delay(1000);
 }

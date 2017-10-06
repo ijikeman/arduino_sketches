@@ -48,6 +48,7 @@
   #define KC_CIRC 0x5E
   #define KC_AMPR 0x26
   #define KC_ASTR 0x2A
+  #define KC_PLUS 0x2B
   #define KC_LPRN 0x28
   #define KC_RPRN 0x29
 
@@ -57,6 +58,7 @@
   #define KC_LBRC 0x5B
   #define KC_RBRC 0x5D
   #define KC_LCBR 0x7B
+  #define KC_PIPE 0x7C
   #define KC_RCBR 0x7D
   #define KC_BSLS 0x5C
   #define KC_SCLN 0x3B
