@@ -16,6 +16,10 @@
 byte currentLayer = BASE;
 byte beforeLayer = BASE;
 
+#define mouseButton 7    // input pin for the mouse pushButton
+bool currentMouseButtonStatus = HIGH;
+bool beforeMouseButtonStatus = HIGH;
+
 // Maxipad
 const int inputNum = 6;
 const int outputNum = 5;
@@ -47,6 +51,7 @@ const int keyMap[][outputNum*2][inputNum*2]  = {
    {KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_EQL },
    {_______, _______, _______, _______, _______, _______ },
    {_______, _______, _______, _______, _______, _______ },
+   {_______, _______, _______, _______, _______, KC_PIPE },
    {KC_DEL, _______, _______, _______, _______, _______ }
   },
 
@@ -60,14 +65,15 @@ const int keyMap[][outputNum*2][inputNum*2]  = {
    {_______, _______, _______, _______, _______, _______ },
    {KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_MINS},
    {_______, _______, _______, _______, _______, _______ },
-   {_______, _______, _______, _______, _______, _______ },
+   {_______, _______, _______, _______, _______, KC_BSLS },
    {KC_DEL, _______, _______, _______, _______, _______ }
   }
 };
 
-
 void setup() {
   Serial.begin(9600);
+  pinMode(mouseButton, INPUT_PULLUP);
+  currentLayer = BASE;
 }
 
 void loop() {

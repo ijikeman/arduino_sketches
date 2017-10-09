@@ -57,6 +57,7 @@
   #define KC_LBRC 0x5B
   #define KC_RBRC 0x5D
   #define KC_LCBR 0x7B
+  #define KC_PIPE 0x7B
   #define KC_RCBR 0x7D
   #define KC_BSLS 0x5C
   #define KC_SCLN 0x3B
