@@ -150,8 +150,8 @@ void loop() {
               Keyboard.release(keycode);
               break;
             case 1: // Layer Tap
-              currentLayer = beforeLayer;
               Keyboard.release(keyMap[currentLayer][i][j]);
+              currentLayer = beforeLayer;
               break;
             default:
               break;
