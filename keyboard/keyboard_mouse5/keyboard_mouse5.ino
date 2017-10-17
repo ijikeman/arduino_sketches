@@ -28,7 +28,7 @@ const bool xReverse = 0;
 const bool yReverse = 0;
 
 // parameters for reading the joystick:
-int range = 20;               // output range of X or Y movement
+int range = 12;               // output range of X or Y movement
 //int threshold = range / 4;    // resting threshold
 int center = range/2;       // resting position value
 bool currentMouseButtonStatus = HIGH;

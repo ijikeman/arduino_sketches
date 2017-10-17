@@ -24,7 +24,7 @@ void MatrixController::read() {
   bool state = 0;
   for (int i = 0; i < *colNum; i++) {
     state = digitalRead(cols[i]);
-    digitalWrite(cols[i], LOW);
+    digitalWrite(cols[i], !state);
     for (int j = 0; j < *rowNum; j++) {
       currentState[i][j] = digitalRead(rows[j]);
       Serial.print(currentState[i][j]);
