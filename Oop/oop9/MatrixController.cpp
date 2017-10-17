@@ -3,12 +3,13 @@
 #include "Arduino.h"
 
 MatrixController::MatrixController (const int * _rows, const int * _rowNum, const int * _cols, const int * _colNum) {
-  cols = _cols;
   rows = _rows;
-  colNum = _colNum;
   rowNum = _rowNum;
-  x = 255;
-  y = 255;
+  cols = _cols;
+  colNum = _colNum;
+  row = 255;
+  col = 255;
+  pushPull = 0;
 }
 
 void MatrixController::initialState(bool state) {
@@ -20,7 +21,9 @@ void MatrixController::initialState(bool state) {
   }
 }
 
+
 void MatrixController::read() {
+      Serial.println("Matrix.read()");
   bool state = 0;
   for (int i = 0; i < *rowNum; i++) {
     state = digitalRead(rows[i]);
@@ -32,15 +35,23 @@ void MatrixController::read() {
       if (beforeState[i][j] != currentState[i][j]) {
         beforeState[i][j] = currentState[i][j];
         digitalWrite(rows[i], state);
-        x = i;
-        y = j;
+        pushPull = currentState[i][j];
+        row = i;
+        col = j;
+        Serial.println("");
+        Serial.print(row);
+        Serial.print(":");
+        Serial.print(col);
+        Serial.print(":");
+        Serial.println(pushPull);
         return;
       }
     }
     digitalWrite(rows[i], state);
   }
   Serial.println("");
-  x = 255;
-  y = 255;
+  row = 255;
+  col = 255;
+  pushPull = 0;
   return;
 }

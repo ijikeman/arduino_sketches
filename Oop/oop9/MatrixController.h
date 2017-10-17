@@ -7,15 +7,16 @@ class MatrixController {
     MatrixController(const int * _rows, const int * _rowNum, const int * _cols, const int * _colNum);
     void initialState(bool state);
     void read();
-    int x;
-    int y;
+    unsigned int row;
+    unsigned int col;
+    bool pushPull;
   private:
     bool currentState[ROW_NUM][COL_NUM];
     bool beforeState[ROW_NUM][COL_NUM];
-    const int * cols;
     const int * rows;
-    const int * colNum;
+    const int * cols;
     const int * rowNum;
+    const int * colNum;
 };
 
 #endif
