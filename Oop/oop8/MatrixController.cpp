@@ -24,11 +24,13 @@ void MatrixController::read() {
   bool state = 0;
   for (int i = 0; i < *colNum; i++) {
     state = digitalRead(cols[i]);
-    digitalWrite(cols[i], !state);
+    digitalWrite(cols[i], LOW);
     for (int j = 0; j < *rowNum; j++) {
       currentState[i][j] = digitalRead(rows[j]);
-      if (beforeState[i][j] == currentState[i][j]) {
-        currentState[i][j] = beforeState[i][j];
+      Serial.print(currentState[i][j]);
+      Serial.print(":");
+      if (beforeState[i][j] != currentState[i][j]) {
+        beforeState[i][j] = currentState[i][j];
         digitalWrite(cols[i], state);
         x = i;
         y = j;
@@ -37,6 +39,7 @@ void MatrixController::read() {
     }
     digitalWrite(cols[i], state);
   }
+  Serial.println("");
   x = 255;
   y = 255;
   return;

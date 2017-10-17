@@ -18,9 +18,10 @@ void setup() {
 void loop() {
   matrix.read();
   if (matrix.x != 255 || matrix.y != 255) {
+    Serial.println("");
     Serial.print(matrix.x);
     Serial.print(":");
     Serial.println(matrix.y);
   }
-  delay(10);
+  delay(500);
 }
