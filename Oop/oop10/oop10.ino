@@ -25,7 +25,8 @@ void setup() {
 
 void loop() {
   if (serialCont.available()) {
-//    serialCont.recieveToSlave();
+    serialCont.recieveToSlave();
+    Serial.println(serialCont.isKeyboard());
   } else if (matrix.read()) {
     serialCont.makeData(KEYBOARD, matrix.pushPull, matrix.out, matrix.in);
     serialCont.sendToMaster();
@@ -37,5 +38,5 @@ void loop() {
   // case MOUSE:
   //   mouseCont.setData(serialCont.data);
   // }
-  delay(10);
+  delay(5);
 }

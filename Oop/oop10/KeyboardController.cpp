@@ -28,9 +28,9 @@ void KeyboardController::input(MatrixController *matrix) {
   Serial.print(keyMap[(*matrix).out][(*matrix).in]);
   if ((*matrix).pushPull) {
     Serial.println(" release");
-     Keyboard.press(keyMap[(*matrix).out][(*matrix).in]);
+    Keyboard.release(keyMap[(*matrix).out][(*matrix).in]);
   } else {
     Serial.println(" push");
-     Keyboard.release(keyMap[(*matrix).out][(*matrix).in]);
+    Keyboard.press(keyMap[(*matrix).out][(*matrix).in]);
   }
 }
