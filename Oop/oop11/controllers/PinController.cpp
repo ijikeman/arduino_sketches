@@ -1,13 +1,15 @@
 #include "PinController.h"
-
+#include <stdio.h>
 PinController::PinController() {
 }
 
 void PinController::setNo(unsigned int _n_no) {
+  printf("set PinNO: %d\n", _n_no);
   n_no = _n_no;
 }
 
 unsigned int PinController::getNo() {
+  printf("get PinNO: %d\n", n_no);
   return n_no;
 }
 

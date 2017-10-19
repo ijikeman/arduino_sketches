@@ -1,13 +1,14 @@
 #ifndef PinsController_h
 #define PinsController_h
 #include "PinController.h"
+#include <vector>
 
 class PinsController {
   public:
-//    PinsController(unsigned int _n_pin_num);
-  	PinsController();
-//    setNo(unsigned int _n_pin_nums[]);
+    PinsController();
+    void setNo(unsigned int * p_array_nos, unsigned int size);
+    void getNo();
   private:
-    PinController pins[pinNum];
+    std::vector<PinController*> v_pins;
 };
 #endif
