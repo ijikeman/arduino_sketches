@@ -148,6 +148,7 @@ void loop() {
           switch(func) {
             case 0:
               Keyboard.release(keycode);
+              currentLayer = beforeLayer;
               break;
             case 1: // Layer Tap
               Keyboard.release(keyMap[currentLayer][i][j]);

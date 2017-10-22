@@ -26,6 +26,15 @@ void PinsController::State(bool _b_state) {
   }
 }
 
-void PinsController::TotalPinNumber() {
-  return $this->total;
+unsigned int PinsController::TotalNumber() {
+  return total;
+}
+
+PinController * Pin(unsigned int n_number) {
+  for (std::vector<PinController*>::iterator itr=v_pins.begin(); itr != v_pins.end(); itr++) {
+    if ((**itr).Number == n_number) {
+      return *itr;
+    }
+  }
+  return NULL;
 }
