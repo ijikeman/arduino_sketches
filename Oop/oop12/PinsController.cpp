@@ -2,6 +2,7 @@
 //#include <vector>
 #include <ArduinoSTL.h>
 PinsController::PinsController() {
+  total = 0;
 }
 
 void PinsController::Num(unsigned int * p_array_nums, unsigned int size) {
@@ -9,6 +10,7 @@ void PinsController::Num(unsigned int * p_array_nums, unsigned int size) {
     PinController *pin = new PinController();
     (*pin).Num(p_array_nums[i]);
     v_pins.push_back(pin);
+    total++;
   }
 }
 
@@ -22,4 +24,8 @@ void PinsController::State(bool _b_state) {
   for (std::vector<PinController*>::iterator itr=v_pins.begin();itr != v_pins.end(); itr++) {
     (**itr).State(_b_state);
   }
+}
+
+void PinsController::TotalPinNumber() {
+  return $this->total;
 }

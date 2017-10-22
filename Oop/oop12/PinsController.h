@@ -10,7 +10,9 @@ class PinsController {
     void Num(unsigned int * p_array_nums, unsigned int size);
     void Mode(bool _b_mode);
     void State(bool _b_state);
+    int  TotalNumber();
   private:
     std::vector<PinController*> v_pins;
+    int total;
 };
 #endif
