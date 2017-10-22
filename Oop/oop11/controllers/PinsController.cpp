@@ -7,9 +7,9 @@ PinsController::PinsController() {
 
 void PinsController::setNo(unsigned int * p_array_nos, unsigned int size) {
   for (int i = 0; i < size; i++) {
-    PinController pin = PinController();
-    pin.setNo(p_array_nos[i]);
-    v_pins.push_back(&pin);
+    PinController *pin = new PinController();
+    (*pin).setNo(p_array_nos[i]);
+    v_pins.push_back(pin);
   //   printf("%d : ", p_array_nos[i]);
   //   printf("%d\n", i);
   //   printf("Size: %lu\n", v_pins.size());
