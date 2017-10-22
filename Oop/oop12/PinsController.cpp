@@ -12,12 +12,6 @@ void PinsController::Num(unsigned int * p_array_nums, unsigned int size) {
   }
 }
 
-//void PinsController::Num() {
-  //for (std::vector<PinController*>::iterator itr=v_pins.begin();itr != v_pins.end(); itr++) {
-   // printf("%d\n", (**itr).Num());
-//  }
-//}
-
 void PinsController::Mode(bool _b_mode) {
   for (std::vector<PinController*>::iterator itr=v_pins.begin();itr != v_pins.end(); itr++) {
     (**itr).Mode(_b_mode);
