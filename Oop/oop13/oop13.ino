@@ -1,6 +1,7 @@
 #include "PinsController.h"
-//#include "MatrixController.h"
+#include "MatrixController.h"
 #include "config.h"
+MatrixController matrixCtr = MatrixController();
 
 void setup() {
   PinsController colPins = PinsController();
@@ -11,10 +12,11 @@ void setup() {
   rowPins.NumAll(ROW_PINS, sizeof(ROW_PINS)/sizeof(unsigned int));
   rowPins.ModeAll(INPUT);
   rowPins.StateAll(HIGH);
-//  MatrixController matrixCtr = MatrixController(&colPins, &rowPins);
+  matrixCtr.OutputPins(&colPins);
+  matrixCtr.InputPins(&rowPins);
+  matrixCtr.InitialState();
 }
 
 void loop() {
-// colPins.Pins();
-//  unsigned int test = matrixCtr.Read();
+  // matrixCtr.Read();
 }

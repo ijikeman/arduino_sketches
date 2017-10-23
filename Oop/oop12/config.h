@@ -4,6 +4,7 @@
 //#define LOW 0
 //#define HIGH 1
 //#endif
-
-const int COL_PINS[] = {4, 5, 9};
-const int ROW_PINS[] = {1, 3, 6, 10};
+#define COL_NUM 3
+#define ROW_NUM 4
+unsigned int COL_PINS[COL_NUM] = {4, 5, 9};
+unsigned int ROW_PINS[ROW_NUM] = {1, 3, 6, 10};
