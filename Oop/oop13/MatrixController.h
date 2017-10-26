@@ -1,22 +1,15 @@
 #ifndef MatrixController_h
 #define MatrixController_h
 #include "PinsController.h"
-const static unsigned int MAX_INPUT_PIN = 20;
-const static unsigned int MAX_OUTPUT_PIN = 20;
+#include "PinStateController.h"
 
 class MatrixController {
   public:
-    MatrixController();
-    void OutputPins(PinsController * _pins);
-    void InputPins(PinsController * _pins);
-    PinsController * OutputPins();
-    PinsController * InputPins();
-    void InitialState();
+    MatrixController(PinsController * _outputPins, PinsController * _inputPins, bool _b_initialState);
     // unsigned int Read();
   private:
     PinsController * inputPins;
     PinsController * outputPins;
-    bool b_beforeState[MAX_OUTPUT_PIN][MAX_INPUT_PIN];
-    bool b_currentState[MAX_OUTPUT_PIN][MAX_INPUT_PIN];
+    PinStateController pinState;
 };
 #endif

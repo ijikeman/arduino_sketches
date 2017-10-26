@@ -1,32 +1,12 @@
 #include "MatrixController.h"
 #include "PinsController.h"
-// #include "PinController.h"
+#include "PinStateController.h"
 
-MatrixController::MatrixController() {
-}
+MatrixController::MatrixController(PinsController * _outputPins, PinsController * _inputPins, bool _b_initialState) {
+  outputPins = _outputPins;
+  inputPins = _inputPins;
 
-void MatrixController::OutputPins(PinsController * _pins) {
-  outputPins = _pins;
-}
-
-PinsController * MatrixController::OutputPins() {
-  return outputPins;
-}
-
-void MatrixController::InputPins(PinsController * _pins) {
-  inputPins = _pins;
-}
-
-PinsController * MatrixController::InputPins() {
-  return inputPins;
-}
-
-void MatrixController::InitialState() {
-  for (unsigned int i = 0; i < *(*outputPins).TotalNumber(); i++) {
-    for (unsigned int j = 0; j < *(*inputPins).TotalNumber(); j++) {
-      // b_beforeState[i][j] = *(*(*inputPins).parray_pins[j]).State();
-    }
-  }
+  PinStateController PinState = PinStateController(*(*outputPins).currentTotal(), *(*inputPins).currentTotal(), _b_initialState) 
 }
 
 // unsigned int MatrixController::Read() {

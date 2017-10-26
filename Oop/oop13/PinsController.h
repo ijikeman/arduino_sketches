@@ -3,16 +3,14 @@
 #include "PinController.h"
 //#include <vector>
 #include <ArduinoSTL.h>
+#include "config.h"
 
 class PinsController {
   public:
-    PinsController();
-    void NumAll(unsigned int * p_array_nums, unsigned int size);
-    void ModeAll(bool _b_mode);
-    void StateAll(bool _b_state);
-    unsigned int * TotalNumber();
+    PinsController(unsigned int * _p_array_nums, unsigned int _p_array_size, bool _b_state, bool _b_mode);
+    unsigned int * currentTotal();
   private:
-    PinController * parray_pins[20];
+    PinController * p_array_pins[MAX_PIN_NUM];
     unsigned int total;
 };
 #endif

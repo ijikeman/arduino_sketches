@@ -1,29 +1,16 @@
 #include "PinController.h"
 #include "Arduino.h"
-PinController::PinController() {
-}
-
-void PinController::Num(unsigned int _n_num) {
+PinController::PinController(unsigned int _n_num, bool _b_state, bool _b_mode) {
   n_num = _n_num;
-}
-
-unsigned int PinController::Num() {
-  return n_num;
-}
-
-void PinController::Mode(bool _b_mode) {
   b_mode = _b_mode;
-  pinMode(n_num, b_mode);
+  b_mode = _b_state;
+  digitalWrite(n_num, b_state);
 }
 
-bool PinController::Mode() {
-  return b_mode;
+void PinController::reverseState() {
+  digitalWrite(n_num, !b_state);
 }
 
-void PinController::State(bool _b_state) {
-  digitalWrite(n_num, _b_state);
-}
-
-bool PinController::State() {
+bool PinController::currentState() {
   return digitalRead(n_num);
 }
