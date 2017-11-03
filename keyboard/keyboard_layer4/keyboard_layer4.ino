@@ -7,11 +7,21 @@
 #define UPPER 1
 #define LOWER 2
 
-//FUNCTIONS
-#define FUNC_LT 1<<12
+// DATA FORMAT F=FUNCTION, L=LAYER, K=KEYCODE
+// FFFFLLLLKKKKKKKK
+#define FUNCTION 0b1111000000000000
+#define LAYER 0b0000111100000000
+#define KEYCODE 0b0000000011111111
 
-// FUNCTIONS MACRO
+//FUNCTIONS
+#define FUNC_NONE 0b000000000000
+#define FUNC_LT 0b000100000000
+
+// LT MACRO
 #define LT(layer,key) (unsigned int)(FUNC_LT | layer << 8 | key)
+
+#define TRUE 1
+#define FALSE 0
 
 byte currentLayer = BASE;
 byte beforeLayer = BASE;
@@ -27,13 +37,13 @@ const int keyMap[][outputNum*2][inputNum*2]  = {
    {KC_TAB,  KC_Q,    KC_W,    KC_E,   KC_R,    KC_T},
    {KC_LCTL, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
    {KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B},
-   {KC_ESC,  NONE,    KC_LALT, KC_LGUI,LT(UPPER, NONE), KC_SPC},
+   {KC_ESC,  NONE,    KC_LALT, KC_LGUI,LT(UPPER, KC_5), KC_SPC},
 
    {KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_MINS},
    {KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,    KC_LBRC},
    {KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN, KC_ENT},
    {KC_N,    KC_M,    KC_COMM, KC_DOT, KC_SLSH, KC_QUOT},
-   {KC_BSPC, LT(LOWER, NONE),  KC_LEFT, KC_DOWN,KC_UP,   KC_RGHT}
+   {KC_BSPC, LT(LOWER, KC_4),  KC_LEFT, KC_DOWN,KC_UP,   KC_RGHT}
   },
 
   [UPPER] = {
@@ -94,6 +104,7 @@ void setup() {
   Mouse.begin();
   pinMode(mouseButton, INPUT_PULLUP);
 
+  // initial keyboardState And Pin Mode
   for ( i = 0; i < outputNum; i++) {
     pinMode(outputPins[i], OUTPUT); // set to OUTPUT and LOW(0v) on all OutputPin
     digitalWrite(outputPins[i], LOW); // set to HIGH(5V) on all OutputPins
@@ -107,6 +118,7 @@ void setup() {
 
 
 void loop() {
+  // LEF Off
   digitalWrite(17, LOW);
   for ( i = 0; i < outputNum; i++) {
     // 対象OUTPUTPinの列の６個に電流が流れる
@@ -118,37 +130,41 @@ void loop() {
         keyboardOrMouse = 1;
 
         int keyData = keyMap[currentLayer][i][j];
-        int func = keyData >> 12;
-        int layer = (keyData & 0b0000111100000000) >> 8;
-        int keycode = keyData & 0b0000000011111111;
+        // get function
+        int func = (keyData & FUNCTION) >> 12;
+        // get layer
+        int switchlayer = (keyData & LAYER) >> 8;
+        // get keycode
+        int keycode = keyData & KEYCODE;
         Serial.println(keyData);
         Serial.print(func);
         Serial.print(":");
-        Serial.print(layer);
+        Serial.print(switchlayer);
         Serial.print(":");
         Serial.println(keycode);
 
+        // press
         if (currentState[i][j] == LOW) {
           // switch layer
           switch(func) {
             case 0:
               Keyboard.press(keycode);
               break;
-            case 1: // Layer Tap
+            case 1: // Layer Tap(LT)
               beforeLayer = currentLayer;
-              currentLayer = layer;
+              currentLayer = switchlayer;
               Keyboard.press(keyMap[currentLayer][i][j]);
               break;
             default:
               break;
           }
           isPress = 1;
+        // release
         } else {
           // switch layer
           switch(func) {
             case 0:
               Keyboard.release(keycode);
-              currentLayer = beforeLayer;
               break;
             case 1: // Layer Tap
               Keyboard.release(keyMap[currentLayer][i][j]);
@@ -203,12 +219,52 @@ void loop() {
       isPress = (readData & 0b01000000) >> 6;
       col = (readData & 0b00111000) >> 3;
       row = readData & 0b00000111;
+
+      int keyData = keyMap[currentLayer][outputNum+col][row];
+      // get function
+      int func = (keyData & FUNCTION) >> 12;
+      // get layer
+      int switchlayer = (keyData & LAYER) >> 8;
+      // get keycode
+      int keycode = keyData & KEYCODE;
+      Serial.println(keyData);
+      Serial.print(func);
+      Serial.print(":");
+      Serial.print(switchlayer);
+      Serial.print(":");
+      Serial.println(keycode);
+
+      // press
       if (isPress == 1) {
-        Keyboard.press(keyMap[outputNum+col][row]);
+        // switch layer
+        switch(func) {
+          case 0:
+            Keyboard.press(keycode);
+            break;
+          case 1: // Layer Tap(LT)
+            beforeLayer = currentLayer;
+            currentLayer = switchlayer;
+            Keyboard.press(keyMap[currentLayer][outputNum+col][row]);
+            break;
+          default:
+            break;
+        }
+      // release
+      } else {
+        // switch layer
+        switch(func) {
+          case 0:
+            Keyboard.release(keycode);
+            break;
+          case 1: // Layer Tap
+            Keyboard.release(keyMap[currentLayer][outputNum+col][row]);
+            currentLayer = beforeLayer;
+            break;
+          default:
+            break;
+        }
       }
-      else {
-        Keyboard.release(keyMap[outputNum+col][row]);
-      }
+      beforeState[i][j] = currentState[i][j];
      //Mouse Mode
     } else {
       mouseXOrY = (readData & 0b01000000) >> 6;
