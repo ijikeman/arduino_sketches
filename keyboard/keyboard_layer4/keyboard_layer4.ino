@@ -18,7 +18,7 @@
 #define FUNC_LT 0b000100000000
 
 // LT MACRO
-#define LT(layer,key) (unsigned int)(FUNC_LT | layer << 8 | key)
+#define LT(layer,key) (unsigned int)(1 << 12| layer << 8 | key)
 
 #define TRUE 1
 #define FALSE 0
@@ -37,42 +37,72 @@ const int keyMap[][outputNum*2][inputNum*2]  = {
    {KC_TAB,  KC_Q,    KC_W,    KC_E,   KC_R,    KC_T},
    {KC_LCTL, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
    {KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B},
-   {KC_ESC,  NONE,    KC_LALT, KC_LGUI,LT(UPPER, KC_5), KC_SPC},
+   {KC_ESC,  NONE,    KC_LALT, KC_LGUI,LT(UPPER, _______), KC_SPC},
 
    {KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_MINS},
    {KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,    KC_LBRC},
    {KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN, KC_ENT},
    {KC_N,    KC_M,    KC_COMM, KC_DOT, KC_SLSH, KC_QUOT},
-   {KC_BSPC, LT(LOWER, KC_4),  KC_LEFT, KC_DOWN,KC_UP,   KC_RGHT}
+   {KC_BSPC, LT(LOWER, _______),  KC_LEFT, KC_DOWN,KC_UP, KC_RGHT}
   },
 
   [UPPER] = {
-   {_______, _______, _______, _______, _______, _______ },
-   {KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC },
-   {_______, _______, _______, _______, _______, _______ },
-   {_______, _______, _______, _______, _______, _______ },
-   {_______, _______, _______, _______, _______, _______ },
+   {KC_GRV, KC_1,    KC_2,    KC_3,   KC_4,    KC_5},
+   {KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC},
+   {KC_LCTL, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
+   {KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B},
+   {KC_ESC,  NONE,    KC_LALT, KC_LGUI,LT(UPPER, _______), KC_SPC},
 
-   {_______, _______, _______, _______, _______, _______ },
-   {KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_EQL },
-   {_______, _______, _______, _______, _______, _______ },
-   {_______, _______, _______, _______, _______, _______ },
-   {KC_DEL, _______, _______, _______, _______, _______ }
+   {KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_MINS},
+   {KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_USCR},
+   {KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN, KC_ENT},
+   {KC_N,    KC_M,    KC_COMM, KC_DOT, KC_SLSH, KC_BSLS},
+   {KC_DEL, LT(LOWER, _______),  KC_EQL, KC_RBRC ,KC_UP, KC_EQL}
   },
 
   [LOWER] = {
-   {_______, _______, _______, _______, _______, _______ },
    {KC_GRV, KC_1,    KC_2,    KC_3,   KC_4,    KC_5},
-   {_______, _______, _______, _______, _______, _______ },
-   {_______, _______, _______, _______, _______, _______ },
-   {_______, _______, _______, _______, _______, _______ },
+   {KC_GRV, KC_1,    KC_2,    KC_3,   KC_4,    KC_5},
+   {KC_LCTL, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
+   {KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B},
+   {KC_ESC,  NONE,    KC_LALT, KC_LGUI,LT(UPPER, _______), KC_SPC},
 
-   {_______, _______, _______, _______, _______, _______ },
    {KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_MINS},
-   {_______, _______, _______, _______, _______, _______ },
-   {_______, _______, _______, _______, _______, _______ },
-   {KC_DEL, _______, _______, _______, _______, _______ }
+   {KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_MINS},
+   {KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN, KC_ENT},
+   {KC_N,    KC_M,    KC_COMM, KC_DOT, KC_SLSH, KC_QUOT},
+   {KC_DEL, LT(LOWER, _______), KC_LEFT, KC_DOWN, KC_UP, KC_RGHT}
   }
+
+  // [UPPER] = {
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {KC_GRV,  KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC },
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {_______, _______, _______, _______, LT(UPPER, _______), _______ },
+
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_EQL },
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {KC_DEL, LT(LOWER, _______), _______, _______, _______, _______ }
+  // },
+
+
+
+  // [LOWER] = {
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {KC_GRV, KC_1,    KC_2,    KC_3,   KC_4,    KC_5},
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {_______, _______, _______, _______, LT(UPPER, _______), _______ },
+
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_MINS},
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {_______, _______, _______, _______, _______, _______ },
+  //  {KC_DEL, LT(LOWER, _______), _______, _______, _______, _______ }
+  // }
 };
 
 
@@ -133,16 +163,9 @@ void loop() {
         // get function
         int func = (keyData & FUNCTION) >> 12;
         // get layer
-        int switchlayer = (keyData & LAYER) >> 8;
+        int switchLayer = (keyData & LAYER) >> 8;
         // get keycode
         int keycode = keyData & KEYCODE;
-        Serial.println(keyData);
-        Serial.print(func);
-        Serial.print(":");
-        Serial.print(switchlayer);
-        Serial.print(":");
-        Serial.println(keycode);
-
         // press
         if (currentState[i][j] == LOW) {
           // switch layer
@@ -151,9 +174,12 @@ void loop() {
               Keyboard.press(keycode);
               break;
             case 1: // Layer Tap(LT)
-              beforeLayer = currentLayer;
-              currentLayer = switchlayer;
-              Keyboard.press(keyMap[currentLayer][i][j]);
+              // 押しっぱなしで前のレイヤ情報が上書きされないようにする
+              if (currentLayer != switchLayer) {
+                beforeLayer = currentLayer;
+                currentLayer = switchLayer;
+              }
+//              Keyboard.press(keyMap[currentLayer][i][j]);
               break;
             default:
               break;
@@ -167,7 +193,7 @@ void loop() {
               Keyboard.release(keycode);
               break;
             case 1: // Layer Tap
-              Keyboard.release(keyMap[currentLayer][i][j]);
+//              Keyboard.release(keyMap[currentLayer][i][j]);
               currentLayer = beforeLayer;
               break;
             default:
@@ -180,6 +206,18 @@ void loop() {
         sendData = keyboardOrMouse << 7 | isPress << 6| i << 3 | j;
         Serial1.write(sendData);
         digitalWrite(17, HIGH);
+        Serial.print("keyData=");
+        Serial.println(keyData);
+        Serial.print("func=");
+        Serial.println(func);
+        Serial.print("cLayer=");
+        Serial.println(switchLayer);
+        Serial.print("sLayer=");
+        Serial.println(currentLayer);
+        Serial.print("bLayer=");
+        Serial.println(beforeLayer);
+        Serial.print("keycode=");
+        Serial.println(keycode);
       }
     }
     digitalWrite(outputPins[i], HIGH); // reset the outputPin to HIGH(5V)
@@ -224,15 +262,9 @@ void loop() {
       // get function
       int func = (keyData & FUNCTION) >> 12;
       // get layer
-      int switchlayer = (keyData & LAYER) >> 8;
+      int switchLayer = (keyData & LAYER) >> 8;
       // get keycode
       int keycode = keyData & KEYCODE;
-      Serial.println(keyData);
-      Serial.print(func);
-      Serial.print(":");
-      Serial.print(switchlayer);
-      Serial.print(":");
-      Serial.println(keycode);
 
       // press
       if (isPress == 1) {
@@ -242,9 +274,12 @@ void loop() {
             Keyboard.press(keycode);
             break;
           case 1: // Layer Tap(LT)
-            beforeLayer = currentLayer;
-            currentLayer = switchlayer;
-            Keyboard.press(keyMap[currentLayer][outputNum+col][row]);
+            // 押しっぱなしで前のレイヤ情報が上書きされないようにする
+            if (currentLayer != switchLayer) {
+              beforeLayer = currentLayer;
+              currentLayer = switchLayer;
+            }
+            //Keyboard.press(keyMap[currentLayer][outputNum+col][row]);
             break;
           default:
             break;
@@ -257,7 +292,7 @@ void loop() {
             Keyboard.release(keycode);
             break;
           case 1: // Layer Tap
-            Keyboard.release(keyMap[currentLayer][outputNum+col][row]);
+            //Keyboard.release(keyMap[currentLayer][outputNum+col][row]);
             currentLayer = beforeLayer;
             break;
           default:
