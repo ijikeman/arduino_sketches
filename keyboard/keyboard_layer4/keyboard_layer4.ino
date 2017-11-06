@@ -49,7 +49,7 @@ const int keyMap[][outputNum*2][inputNum*2]  = {
   [UPPER] = {
    {KC_GRV, KC_1,    KC_2,    KC_3,   KC_4,    KC_5},
    {KC_CHIL, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC},
-   {KC_LCTL, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
+   {KC_CAPS, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
    {KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B},
    {KC_ESC,  NONE,    KC_LALT, KC_LGUI,LT(UPPER, _______), KC_SPC},
 
@@ -57,7 +57,7 @@ const int keyMap[][outputNum*2][inputNum*2]  = {
    {KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_USCR},
    {KC_H,    KC_J,    KC_K,    KC_L,   KC_SCLN, KC_ENT},
    {KC_N,    KC_M,    KC_COMM, KC_DOT, KC_SLSH, KC_BSLS},
-   {KC_DEL, LT(LOWER, _______),  KC_EQL, KC_RBRC ,KC_UP, KC_EQL}
+   {KC_DEL,  KC_EQL,  KC_LEFT, KC_DOWN, KC_UP, KC_RGHT}
   },
 
   [LOWER] = {
@@ -65,7 +65,7 @@ const int keyMap[][outputNum*2][inputNum*2]  = {
    {KC_GRV, KC_1,    KC_2,    KC_3,   KC_4,    KC_5},
    {KC_LCTL, KC_A,    KC_S,    KC_D,   KC_F,    KC_G},
    {KC_LSFT, KC_Z,    KC_X,    KC_C,   KC_V,    KC_B},
-   {KC_ESC,  NONE,    KC_LALT, KC_LGUI,LT(UPPER, _______), KC_SPC},
+   {KC_ESC,  NONE,    KC_LALT, KC_LGUI,KC_RBRC, KC_SPC},
 
    {KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_MINS},
    {KC_6,    KC_7,    KC_8,    KC_9,    KC_0,   KC_MINS},
@@ -329,7 +329,7 @@ void loop() {
       }
     }
   }
-  delay(10);
+  delay(30);
 }
 
 int readAxis(int thisAxis, bool thisReverse) {
