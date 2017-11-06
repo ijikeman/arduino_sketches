@@ -56,9 +56,10 @@
   #define KC_SPC  0x20
   #define KC_LBRC 0x5B
   #define KC_RBRC 0x5D
-  #define KC_USCR 0x5D
+  #define KC_USCR 0x5F
   #define KC_LCBR 0x7B
   #define KC_RCBR 0x7D
+  #define KC_CHIL 0x7E
   #define KC_BSLS 0x5C
   #define KC_SCLN 0x3B
   #define KC_QUOT 0x27
