@@ -23,6 +23,10 @@
 #define TRUE 1
 #define FALSE 0
 
+#define MAX_STOCK_KEYCODE_NUM 8
+byte pressKeycodes[MAX_STOCK_KEYCODE_NUM];
+unsigned int pressKeycodeNum = 0;
+byte baseLayer = BASE;
 byte currentLayer = BASE;
 byte beforeLayer = BASE;
 
@@ -144,10 +148,16 @@ void setup() {
       beforeState[i][j] = currentState[i][j] = HIGH; // initial to curentState, beforeState
     }
   }
+
+  // initial pressKeycodes
+  for (int k = 0; k < MAX_STOCK_KEYCODE_NUM; k++) {
+    pressKeycodes[k] = 0xFF;
+  }
 }
 
 
 void loop() {
+  int k;
   // LEF Off
   digitalWrite(17, LOW);
   for ( i = 0; i < outputNum; i++) {
@@ -156,6 +166,8 @@ void loop() {
     for (j = 0; j < inputNum; j++) {
       // pushするとそのinputPinは断線状態となり電流が流れずLOWとなる
       currentState[i][j] = digitalRead(inputPins[j]); // read InputPin and judge Push(LOW=0V), or Not_Push(HIGH=5V) on Switch
+
+      currentState[i][j] = digitalRead(inputPins[j]);
       if (beforeState[i][j] != currentState[i][j]) {
         keyboardOrMouse = 1;
 
@@ -171,15 +183,21 @@ void loop() {
           // switch layer
           switch(func) {
             case 0:
-              Keyboard.press(keycode);
+                Keyboard.press(keycode);
+                // LT, MO実装の為 pressしたkeycodeをストック
+                for (k = 0; k < MAX_STOCK_KEYCODE_NUM; k++) {
+                  if (pressKeycodes[k] == 0xFF) {
+                    pressKeycodes[k] = keycode;
+                    pressKeycodeNum++;
+                    break;
+                  }
+                }
               break;
-            case 1: // Layer Tap(LT)
-              // 押しっぱなしで前のレイヤ情報が上書きされないようにする
-              if (currentLayer != switchLayer) {
-                beforeLayer = currentLayer;
+            case 1: // Layer Tap(LT) MO
+              // 全てのKeycodeがReleaseされている場合のみレイヤーを切り替える
+              if (pressKeycodeNum == 0) {
                 currentLayer = switchLayer;
               }
-//              Keyboard.press(keyMap[currentLayer][i][j]);
               break;
             default:
               break;
@@ -190,11 +208,28 @@ void loop() {
           // switch layer
           switch(func) {
             case 0:
-              Keyboard.release(keycode);
+              // pressKeycodesからreleaseされたものは省く
+              for (k = 0; k < MAX_STOCK_KEYCODE_NUM; k++) {
+                if (pressKeycodes[k] == keycode) {
+                  // layerが切り替わりで無意味なreleaseは避ける
+                  Keyboard.release(keycode);
+                  pressKeycodes[k] = 0xFF;
+                  pressKeycodeNum--;
+                  break;
+                }
+              }
               break;
-            case 1: // Layer Tap
-//              Keyboard.release(keyMap[currentLayer][i][j]);
-              currentLayer = beforeLayer;
+            // LayerをbaseLayerに戻す
+            case 1: // layer Tap(LT), MO
+                // layerが元に戻った場合はreleaseが行われていないキーはreleaseする(本当はLayer戻しの予約だけして処理を終了し、StockKeycodeがなくなったタイミングで発動させるほうがいい)
+                for (k = 0; k < MAX_STOCK_KEYCODE_NUM; k++) {
+                  if (pressKeycodes[k] != 0xFF) {
+                    Keyboard.release(pressKeycodes[k]);
+                    pressKeycodes[k] = 0xFF;
+                    pressKeycodeNum--;
+                  }
+                }
+                currentLayer = baseLayer;
               break;
             default:
               break;
@@ -205,7 +240,7 @@ void loop() {
         // convert 8bit data
         sendData = keyboardOrMouse << 7 | isPress << 6| i << 3 | j;
         Serial1.write(sendData);
-        digitalWrite(17, HIGH);
+        // digitalWrite(17, HIGH);
         // Serial.print("keyData=");
         // Serial.println(keyData);
         // Serial.print("func=");
@@ -218,6 +253,13 @@ void loop() {
         // Serial.println(beforeLayer);
         // Serial.print("keycode=");
         // Serial.println(keycode);
+        // Serial.print("pressKeycodeNum=");
+        // Serial.println(pressKeycodeNum);
+        // Serial.print("pressKeycode=");
+        // for (k = 0; k < MAX_STOCK_KEYCODE_NUM; k++) {a
+        //      Serial.print(pressKeycodes[k]);
+        // }
+        // Serial.println("");
       }
     }
     digitalWrite(outputPins[i], HIGH); // reset the outputPin to HIGH(5V)
@@ -272,14 +314,20 @@ void loop() {
         switch(func) {
           case 0:
             Keyboard.press(keycode);
+            // LT, MO実装の為 pressしたkeycodeをストック
+            for (k = 0; k < MAX_STOCK_KEYCODE_NUM; k++) {
+              if (pressKeycodes[k] == 0xFF) {
+                pressKeycodes[k] = keycode;
+                pressKeycodeNum++;
+                break;
+              }
+            }
             break;
-          case 1: // Layer Tap(LT)
-            // 押しっぱなしで前のレイヤ情報が上書きされないようにする
-            if (currentLayer != switchLayer) {
-              beforeLayer = currentLayer;
+          case 1: // Layer Tap(LT) MO
+            // 全てのKeycodeがReleaseされている場合のみレイヤーを切り替える
+            if (pressKeycodeNum == 0) {
               currentLayer = switchLayer;
             }
-            //Keyboard.press(keyMap[currentLayer][outputNum+col][row]);
             break;
           default:
             break;
@@ -289,11 +337,27 @@ void loop() {
         // switch layer
         switch(func) {
           case 0:
-            Keyboard.release(keycode);
+            // pressKeycodesからreleaseされたものは省く
+            for (k = 0; k < MAX_STOCK_KEYCODE_NUM; k++) {
+              if (pressKeycodes[k] == keycode) {
+                // layerが切り替わりで無意味なreleaseは避ける
+                Keyboard.release(keycode);
+                pressKeycodes[k] = 0xFF;
+                pressKeycodeNum--;
+                break;
+              }
+            }
             break;
-          case 1: // Layer Tap
-            //Keyboard.release(keyMap[currentLayer][outputNum+col][row]);
-            currentLayer = beforeLayer;
+          case 1: // layer Tap(LT), MO
+            // layerが元に戻った場合はreleaseが行われていないキーはreleaseする
+            for (k = 0; k < MAX_STOCK_KEYCODE_NUM; k++) {
+              if (pressKeycodes[k] != 0xFF) {
+                Keyboard.release(pressKeycodes[k]);
+                pressKeycodes[k] = 0xFF;
+                pressKeycodeNum--;
+              }
+            }
+            currentLayer = baseLayer;
             break;
           default:
             break;
@@ -341,7 +405,7 @@ void loop() {
       }
     }
   }
-  delay(5);
+  delay(10);
 }
 
 int readAxis(int thisAxis, bool thisReverse) {
