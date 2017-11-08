@@ -194,10 +194,7 @@ void loop() {
                 }
               break;
             case 1: // Layer Tap(LT) MO
-              // 全てのKeycodeがReleaseされている場合のみレイヤーを切り替える
-              if (pressKeycodeNum == 0) {
                 currentLayer = switchLayer;
-              }
               break;
             default:
               break;
@@ -324,10 +321,7 @@ void loop() {
             }
             break;
           case 1: // Layer Tap(LT) MO
-            // 全てのKeycodeがReleaseされている場合のみレイヤーを切り替える
-            if (pressKeycodeNum == 0) {
               currentLayer = switchLayer;
-            }
             break;
           default:
             break;
